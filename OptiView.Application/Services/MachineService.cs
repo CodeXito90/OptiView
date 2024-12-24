@@ -1,10 +1,12 @@
-﻿using OptiView.Domain.Interfaces;
+﻿using OptiView.Domain.Entities;
+using OptiView.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
+using Machine = OptiView.Domain.Entities.Machine;
 
 namespace OptiView.Application.Services
 {
