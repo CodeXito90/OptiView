@@ -1,52 +1,267 @@
 ﻿@page "/machines"
+@using OptiView.Application.DTOs
 @using OptiView.Domain.Entities
 @using OptiView.Domain.Interfaces
 @inject IMachineService MachineService
-
-<h3>Machine List</h3>
-
-@if (machines == null)
-{
-    <p>Loading machines...</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Last Updated</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="machines-container">
+    <div class="header">
+        <h1 class="title">Machine List</h1>
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Total Machines</span>
+                <span class="stat-value">@(machines?.Count ?? 0)</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Online</span>
+                <span class="stat-value">@(machines?.Count(m => m.Status == MachineStatus.Online) ?? 0)</span>
+            </div>
+        </div>
+    </div>
+    @if (machines == null)
+    {
+        <div class="loading-container">
+            <div class="loader"></div>
+            <p>Loading machines...</p>
+        </div>
+    }
+    else
+    {
+        <div class="machine-grid">
             @foreach (var machine in machines)
             {
-                <tr>
-                    <td>@machine.Name</td>
-                    <td class="@machine.Status">@machine.Status</td>
-                    <td>@machine.LastUpdated</td>
-                    <td>
-                        <button class="btn btn-primary"
+                <div class="machine-card @GetStatusClass(machine.Status)">
+                    <div class="card-header">
+                        <h3 class="machine-name">@machine.Name</h3>
+                        <div class="status-badge @machine.StatusColor">
+                            @machine.StatusDisplay
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="info-row">
+                            <span class="label">Last Updated:</span>
+                            <span class="value">@machine.LastUpdatedDisplay</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(machine.Description))
+                        {
+                            <div class="info-row">
+                                <span class="label">Description:</span>
+                                <span class="value">@machine.Description</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-button @GetButtonClass(machine.Status)"
                                 @onclick="() => UpdateMachineStatus(machine.Id, GetNextStatus(machine.Status))">
-                            Toggle Status
+                            <span class="button-content">
+                                <i class="fas fa-sync-alt"></i>
+                                Toggle Status
+                            </span>
                         </button>
-                    </td>
-                </tr>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
-
+        </div>
+    }
+</div>
+<style>
+    .machines-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #1a1f2c;
+        margin: 0;
+    }
+    .stats {
+        display: flex;
+        gap: 1.5rem;
+    }
+    .stat-item {
+        background: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .stat-label {
+        display: block;
+        font-size: 0.875rem;
+        color: #666;
+    }
+    .stat-value {
+        display: block;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1f2c;
+    }
+    .machine-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    .machine-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        overflow: hidden;
+    }
+    .machine-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    .card-header {
+        padding: 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+    }
+    .machine-name {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1f2c;
+    }
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .status-badge.online {
+        background: #dcfce7;
+        color: #166534;
+    }
+    .status-badge.offline {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    .status-badge.maintenance {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    .card-content {
+        padding: 1.25rem;
+    }
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+    .label {
+        color: #666;
+        font-size: 0.875rem;
+    }
+    .value {
+        color: #1a1f2c;
+        font-weight: 500;
+    }
+    .card-actions {
+        padding: 1.25rem;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+    }
+    .action-button {
+        width: 100%;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .action-button.online {
+        background: #9b87f5;
+        color: white;
+    }
+    .action-button.offline {
+        background: #ef4444;
+        color: white;
+    }
+    .action-button.maintenance {
+        background: #f59e0b;
+        color: white;
+    }
+    .action-button:hover {
+        filter: brightness(110%);
+    }
+    .button-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+    }
+    .loader {
+        border: 3px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 3px solid #9b87f5;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @@media (max-width: 768px) {
+        .machines-container {
+            padding: 1rem;
+        }
+        .header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .machine-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 @code {
-    private IEnumerable<Machine> machines;
-
+    private List<MachineDto> machines;
     protected override async Task OnInitializedAsync()
     {
-        machines = await MachineService.GetAllMachinesAsync();
+        var machineEntities = await MachineService.GetAllMachinesAsync();
+        machines = machineEntities.Select(machine => new MachineDto
+            {
+                Id = machine.Id,
+                Name = machine.Name,
+                Status = machine.Status,
+                LastUpdated = machine.LastUpdated,
+                Description = machine.Description
+            }).ToList();
     }
-
+    private async Task UpdateMachineStatus(string machineId, MachineStatus newStatus)
+    {
+        await MachineService.UpdateMachineStatusAsync(machineId, newStatus);
+        // Refresh the machine list after updating the status
+        var machineEntities = await MachineService.GetAllMachinesAsync();
+        machines = machineEntities.Select(machine => new MachineDto
+            {
+                Id = machine.Id,
+                Name = machine.Name,
+                Status = machine.Status,
+                LastUpdated = machine.LastUpdated,
+                Description = machine.Description
+            }).ToList();
+    }
     private MachineStatus GetNextStatus(MachineStatus currentStatus)
     {
         return currentStatus switch
@@ -57,9 +272,24 @@ else
             _ => MachineStatus.Offline
         };
     }
-    private async Task UpdateMachineStatus(string machineId, MachineStatus newStatus)
+    private string GetStatusClass(MachineStatus status)
     {
-        await MachineService.UpdateMachineStatusAsync(machineId, newStatus);
-        machines = await MachineService.GetAllMachinesAsync(); // Refresh the list after update
+        return status switch
+        {
+            MachineStatus.Online => "status-online",
+            MachineStatus.Offline => "status-offline",
+            MachineStatus.Maintenance => "status-maintenance",
+            _ => "status-offline"
+        };
+    }
+    private string GetButtonClass(MachineStatus status)
+    {
+        return status switch
+        {
+            MachineStatus.Online => "online",
+            MachineStatus.Offline => "offline",
+            MachineStatus.Maintenance => "maintenance",
+            _ => "offline"
+        };
     }
 }
