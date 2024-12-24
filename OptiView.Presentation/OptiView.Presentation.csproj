@@ -10,6 +10,7 @@
     <ProjectReference Include="..\OptiView.Application\OptiView.Application.csproj" />
     <ProjectReference Include="..\OptiView.Domain\OptiView.Domain.csproj" />
     <ProjectReference Include="..\OptiView.Infrastructure\OptiView.Infrastructure.csproj" />
+    <ProjectReference Include="..\OptiView.Tests\OptiView.Tests.csproj" />
   </ItemGroup>
 
 </Project>

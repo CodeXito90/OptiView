@@ -6,63 +6,50 @@ using System.Threading.Tasks;
 using Moq;
 using OptiView.Domain.Entities;
 using OptiView.Domain.Interfaces;
+using Xunit.Abstractions;
 
 namespace OptiView.Tests.Mocks
 {
-    public class MockMachineRepository : Mock<IMachineRepository>
+    public class MockMachineRepository : IMachineRepository
     {
-        public MockMachineRepository()
+        private readonly List<Machine> _machines = new()
         {
-            var machines = new List<Machine>
+            new Machine { Id = "1", Name = "SuperSkySchorcher-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Test Machine 1" },
+            new Machine { Id = "2", Name = "Drill-02", Status = MachineStatus.Online, LastUpdated = DateTime.UtcNow, Description = "Test Machine 2" },
+            new Machine { Id = "3", Name = "MechX92-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Test Machine 3" },
+        };
+        public Task<IEnumerable<Machine>> GetAllAsync() => Task.FromResult(_machines.AsEnumerable());
+
+        public Task<Machine> GetByIdAsync(string id) => Task.FromResult(_machines.FirstOrDefault(m => m.Id == id));
+
+        public Task<Machine> AddAsync(Machine machine)
+        {
+            _machines.Add(machine);
+            return Task.FromResult(machine);
+        }
+
+        public Task<Machine> UpdateAsync(Machine machine)
+        {
+            var existing = _machines.FirstOrDefault(m => m.Id == machine.Id);
+            if (existing != null)
             {
-                new Machine 
-                { 
-                    Id = "1", 
-                    Name = "Machine 1", 
-                    Status = MachineStatus.Online,
-                    LastUpdated = DateTime.UtcNow,
-                    Description = "Test Machine 1"
-                }
-            };
+                existing.Name = machine.Name;
+                existing.Status = machine.Status;
+                existing.LastUpdated = machine.LastUpdated;
+                existing.Description = machine.Description;
+            }
+            return Task.FromResult(existing);
+        }
 
-            Setup(repo => repo.GetAllAsync())
-                .ReturnsAsync(machines);
-
-            Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync((string id) => machines.FirstOrDefault(m => m.Id == id));
-
-            Setup(repo => repo.AddAsync(It.IsAny<Machine>()))
-                .ReturnsAsync((Machine machine) =>
-                {
-                    machines.Add(machine);
-                    return machine;
-                });
-
-            Setup(repo => repo.UpdateAsync(It.IsAny<Machine>()))
-                .ReturnsAsync((Machine machine) =>
-                {
-                    var existingMachine = machines.FirstOrDefault(m => m.Id == machine.Id);
-                    if (existingMachine != null)
-                    {
-                        existingMachine.Name = machine.Name;
-                        existingMachine.Status = machine.Status;
-                        existingMachine.LastUpdated = machine.LastUpdated;
-                        existingMachine.Description = machine.Description;
-                    }
-                    return existingMachine;
-                });
-
-            Setup(repo => repo.DeleteAsync(It.IsAny<string>()))
-                .ReturnsAsync((string id) =>
-                {
-                    var machine = machines.FirstOrDefault(m => m.Id == id);
-                    if (machine != null)
-                    {
-                        machines.Remove(machine);
-                        return true;
-                    }
-                    return false;
-                });
+        public Task<bool> DeleteAsync(string id)
+        {
+            var machine = _machines.FirstOrDefault(m => m.Id == id);
+            if (machine != null)
+            {
+                _machines.Remove(machine);
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
     }
 }

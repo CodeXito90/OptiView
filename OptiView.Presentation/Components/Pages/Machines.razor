@@ -1,0 +1,65 @@
+﻿@page "/machines"
+@using OptiView.Domain.Entities
+@using OptiView.Domain.Interfaces
+@inject IMachineService MachineService
+
+<h3>Machine List</h3>
+
+@if (machines == null)
+{
+    <p>Loading machines...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Last Updated</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var machine in machines)
+            {
+                <tr>
+                    <td>@machine.Name</td>
+                    <td class="@machine.Status">@machine.Status</td>
+                    <td>@machine.LastUpdated</td>
+                    <td>
+                        <button class="btn btn-primary"
+                                @onclick="() => UpdateMachineStatus(machine.Id, GetNextStatus(machine.Status))">
+                            Toggle Status
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Machine> machines;
+
+    protected override async Task OnInitializedAsync()
+    {
+        machines = await MachineService.GetAllMachinesAsync();
+    }
+
+    private MachineStatus GetNextStatus(MachineStatus currentStatus)
+    {
+        return currentStatus switch
+        {
+            MachineStatus.Online => MachineStatus.Offline,
+            MachineStatus.Offline => MachineStatus.Maintenance,
+            MachineStatus.Maintenance => MachineStatus.Online,
+            _ => MachineStatus.Offline
+        };
+    }
+    private async Task UpdateMachineStatus(string machineId, MachineStatus newStatus)
+    {
+        await MachineService.UpdateMachineStatusAsync(machineId, newStatus);
+        machines = await MachineService.GetAllMachinesAsync(); // Refresh the list after update
+    }
+}

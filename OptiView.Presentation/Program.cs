@@ -1,4 +1,8 @@
+using OptiView.Application.Services;
+using OptiView.Domain.Interfaces;
+
 using OptiView.Presentation.Components;
+using OptiView.Tests.Mocks;
 
 namespace OptiView.Presentation
 {
@@ -9,8 +13,13 @@ namespace OptiView.Presentation
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddScoped<IMachineService, MachineService>();
+            builder.Services.AddScoped<IMachineRepository, MockMachineRepository>();
 
             var app = builder.Build();
 
