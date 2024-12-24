@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163 d17.12
+VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptiView.Presentation", "OptiView.Presentation\OptiView.Presentation.csproj", "{7FC915DD-695F-468C-B62C-A41DA5DCFF99}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptiView.Domain", "OptiView.Domain\OptiView.Domain.csproj", "{7671A6B7-0863-4054-ABF8-02820A32277E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptiView.Application", "OptiView.Application\OptiView.Application.csproj", "{625D3C2C-B929-4043-ADF2-95CAB7ACA34D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptiView.Tests", "OptiView.Tests\OptiView.Tests.csproj", "{EDDCF410-2E63-4721-B30F-99388DC7CDF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{625D3C2C-B929-4043-ADF2-95CAB7ACA34D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{625D3C2C-B929-4043-ADF2-95CAB7ACA34D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{625D3C2C-B929-4043-ADF2-95CAB7ACA34D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDDCF410-2E63-4721-B30F-99388DC7CDF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDDCF410-2E63-4721-B30F-99388DC7CDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDDCF410-2E63-4721-B30F-99388DC7CDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDDCF410-2E63-4721-B30F-99388DC7CDF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

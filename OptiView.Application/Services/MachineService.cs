@@ -12,9 +12,9 @@ namespace OptiView.Application.Services
 {
     public class MachineService : IMachineService
     {
-        private readonly MockMachineRepository _repository;
+        private readonly IMachineRepository _repository;
 
-        public MachineService(MockMachineRepository repository)
+        public MachineService(IMachineRepository repository)
         {
             _repository = repository;
         }
@@ -31,9 +31,15 @@ namespace OptiView.Application.Services
 
         public async Task<Machine> UpdateMachineStatusAsync(string id, MachineStatus newStatus)
         {
-            return await _repository.UpdateAsync(id, newStatus);
+            var machine = await _repository.GetByIdAsync(id);
+            if (machine != null)
+            {
+                machine.Status = newStatus;
+                machine.LastUpdated = DateTime.UtcNow;
+                return await _repository.UpdateAsync(machine);
+            }
+            return null;
         }
-
         public async Task<Machine> AddMachineAsync(Machine machine)
         {
             return await _repository.AddAsync(machine);
