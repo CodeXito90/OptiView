@@ -20,7 +20,13 @@ namespace OptiView.Tests.Mocks
         };
         public Task<IEnumerable<Machine>> GetAllAsync() => Task.FromResult(_machines.AsEnumerable());
 
-        public Task<Machine> GetByIdAsync(string id) => Task.FromResult(_machines.FirstOrDefault(m => m.Id == id));
+        public Task<Machine> GetByIdAsync(string id)
+        {
+            var machine = _machines.FirstOrDefault(m => m.Id == id);
+            if (machine == null)
+                throw new KeyNotFoundException($"Machine with id {id} not found");
+            return Task.FromResult(machine);
+        }
 
         public Task<Machine> AddAsync(Machine machine)
         {
@@ -31,13 +37,13 @@ namespace OptiView.Tests.Mocks
         public Task<Machine> UpdateAsync(Machine machine)
         {
             var existing = _machines.FirstOrDefault(m => m.Id == machine.Id);
-            if (existing != null)
-            {
-                existing.Name = machine.Name;
-                existing.Status = machine.Status;
-                existing.LastUpdated = machine.LastUpdated;
-                existing.Description = machine.Description;
-            }
+            if (existing == null)
+                throw new KeyNotFoundException($"Machine with id {machine.Id} not found");
+            
+            existing.Name = machine.Name;
+            existing.Status = machine.Status;
+            existing.LastUpdated = machine.LastUpdated;
+            existing.Description = machine.Description;
             return Task.FromResult(existing);
         }
 
@@ -50,6 +56,16 @@ namespace OptiView.Tests.Mocks
                 return Task.FromResult(true);
             }
             return Task.FromResult(false);
+        }
+
+        public Task SendDataToMachineAsync(string id, object data)
+        {
+            var machine = _machines.FirstOrDefault(m => m.Id == id);
+            if (machine != null)
+            {
+                machine.LastUpdated = DateTime.UtcNow;
+            }
+            return Task.CompletedTask;
         }
     }
 }

@@ -6,6 +6,7 @@
 <div class="machines-container">
     <div class="header">
         <h1 class="title">Machine List</h1>
+        <button class="add-machine-btn" @onclick="OpenAddMachineDialog">Add Machine</button>
         <div class="stats">
             <div class="stat-item">
                 <span class="stat-label">Total Machines</span>
@@ -50,6 +51,12 @@
                         }
                     </div>
                     <div class="card-actions">
+                        <button class="action-button" @onclick="() => SendDataToMachine(machine.Id)">
+                            Send Data
+                        </button>
+                        <button class="action-button delete" @onclick="() => DeleteMachine(machine.Id)">
+                            Delete
+                        </button>
                         <button class="action-button @GetButtonClass(machine.Status)"
                                 @onclick="() => UpdateMachineStatus(machine.Id, GetNextStatus(machine.Status))">
                             <span class="button-content">
@@ -235,7 +242,7 @@
     }
 </style>
 @code {
-    private List<MachineDto> machines;
+    private List<MachineDto> machines = new();
     protected override async Task OnInitializedAsync()
     {
         var machineEntities = await MachineService.GetAllMachinesAsync();
@@ -291,5 +298,21 @@
             MachineStatus.Maintenance => "maintenance",
             _ => "offline"
         };
+    }
+    private async Task SendDataToMachine(string machineId)
+    {
+        var dummyData = new { message = "Test data" }; // Temporärt testobjekt
+        await MachineService.SendDataToMachineAsync(machineId, dummyData);
+        await OnInitializedAsync();
+    }
+    private async Task DeleteMachine(string machineId)
+    {
+        await MachineService.DeleteMachineAsync(machineId);
+        await OnInitializedAsync(); // Uppdatera listan efter borttagning
+    }
+    private async Task OpenAddMachineDialog()
+    {
+        // Temporär implementation
+        await Task.CompletedTask;
     }
 }

@@ -14,5 +14,6 @@ namespace OptiView.Domain.Interfaces
         Task<Machine> UpdateMachineStatusAsync(string id, MachineStatus newStatus);
         Task<Machine> AddMachineAsync(Machine machine);
         Task<bool> DeleteMachineAsync(string id);
+        Task SendDataToMachineAsync(string id, object data);
     }
 }

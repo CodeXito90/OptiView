@@ -32,13 +32,9 @@ namespace OptiView.Application.Services
         public async Task<Machine> UpdateMachineStatusAsync(string id, MachineStatus newStatus)
         {
             var machine = await _repository.GetByIdAsync(id);
-            if (machine != null)
-            {
-                machine.Status = newStatus;
-                machine.LastUpdated = DateTime.UtcNow;
-                return await _repository.UpdateAsync(machine);
-            }
-            return null;
+            machine.Status = newStatus;
+            machine.LastUpdated = DateTime.UtcNow;
+            return await _repository.UpdateAsync(machine);
         }
         public async Task<Machine> AddMachineAsync(Machine machine)
         {
@@ -48,6 +44,11 @@ namespace OptiView.Application.Services
         public async Task<bool> DeleteMachineAsync(string id)
         {
             return await _repository.DeleteAsync(id);
+        }
+
+        public async Task SendDataToMachineAsync(string id, object data)
+        {
+            await _repository.SendDataToMachineAsync(id, data);
         }
     }
 }
