@@ -14,9 +14,9 @@ namespace OptiView.Tests.Mocks
     {
         private readonly List<Machine> _machines = new()
         {
-            new Machine { Id = "1", Name = "SuperSkySchorcher-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Test Machine 1" },
-            new Machine { Id = "2", Name = "Drill-02", Status = MachineStatus.Maintenance, LastUpdated = DateTime.UtcNow, Description = "Test Machine 2" },
-            new Machine { Id = "3", Name = "MechX92-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Test Machine 3" },
+            new Machine { Id = "1", Name = "SuperSkySchorcher-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Schorcher system produced by renowned Galaxy starbelt ventures " },
+            new Machine { Id = "2", Name = "Starship XIV ", Status = MachineStatus.Maintenance, LastUpdated = DateTime.UtcNow, Description = "Frigate class 2nd Gen starship with superior firepower and unmatched agility" },
+            new Machine { Id = "3", Name = "MechX92-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Someone say OPTIMUS PRIME???" },
         };
         public Task<IEnumerable<Machine>> GetAllAsync() => Task.FromResult(_machines.AsEnumerable());
 
