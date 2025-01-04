@@ -16,7 +16,7 @@ namespace OptiView.Tests.Mocks
         {
             new Machine { Id = "1", Name = "SuperSkySchorcher-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Schorcher system produced by renowned Galaxy starbelt ventures " },
             new Machine { Id = "2", Name = "Starship XIV ", Status = MachineStatus.Maintenance, LastUpdated = DateTime.UtcNow, Description = "Frigate class 2nd Gen starship with superior firepower and unmatched agility" },
-            new Machine { Id = "3", Name = "MechX92-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Someone say OPTIMUS PRIME???" },
+            new Machine { Id = "3", Name = "MechX92-01", Status =  MachineStatus.Online, LastUpdated = DateTime.UtcNow,  Description = "Did someone say OPTIMUS PRIME???" },
         };
         public Task<IEnumerable<Machine>> GetAllAsync() => Task.FromResult(_machines.AsEnumerable());
 

@@ -3,13 +3,16 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel.DataAnnotations
 
-<div class="dialog-overlay">
-    <div class="dialog">
-        <h2>Add New Machine</h2>
+<div class="dialog-overlay" @onclick="OnCancel">
+    <div class="dialog-container" @onclick:stopPropagation>
+        <div class="dialog-header">
+            <h2 class="dialog-title">Add New Machine</h2>
+        </div>
+
         <EditForm Model="@MachineDto" OnValidSubmit="HandleSubmit">
             <DataAnnotationsValidator />
             <ValidationSummary />
-            
+
             <div class="form-group">
                 <label for="name">Name:</label>
                 <InputText id="name" @bind-Value="MachineDto.Name" class="form-control" />
@@ -42,6 +45,108 @@
 </div>
 
 <style>
+    .dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    /* Dialog container */
+    .dialog-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        z-index: 1001;
+    }
+
+    .dialog-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .dialog-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+
+    /* Form controls */
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+    /* Button container */
+    .dialog-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 2rem;
+    }
+
+    /* Button styles */
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border: 1px solid #0d6efd;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: 1px solid #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5c636a;
+            border-color: #565e64;
+        }
+
+    /* Validation summary styling */
+    ::deep .validation-summary-errors {
+        color: #dc3545;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        border: 1px solid #f5c2c7;
+        border-radius: 4px;
+        background-color: #f8d7da;
+    }
+
     .validation-message {
         color: #dc3545;
         font-size: 0.875rem;
