@@ -1,0 +1,80 @@
+﻿@code {
+    [Parameter] public string Icon { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string Description { get; set; }
+    [Parameter] public string IconBackground { get; set; }
+}
+
+<div class="feature-card">
+    <div class="feature-icon @IconBackground">
+        <i class="@Icon"></i>
+    </div>
+    <h3 class="feature-title">@Title</h3>
+    <p class="feature-description">@Description</p>
+    <div class="feature-hover-effect"></div>
+</div>
+
+<style>
+    .feature-card {
+        position: relative;
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(30, 41, 59, 0.8));
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(71, 85, 105, 0.3);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+    .feature-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        color: white;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-title {
+        color: #f3f4f6;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-description {
+        color: #d1d5db;
+        font-size: 1rem;
+        line-height: 1.5;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-hover-effect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover .feature-hover-effect {
+        opacity: 1;
+    }
+</style>

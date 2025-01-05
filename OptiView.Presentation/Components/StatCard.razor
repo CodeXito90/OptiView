@@ -1,0 +1,25 @@
+﻿
+
+<div class="stat-card @CssClass">
+    <div class="stat-icon @CssClass">
+        <i class="@Icon"></i>
+    </div>
+    <div class="stat-info">
+        <div class="stat-label">@Label</div>
+        <div class="stat-value">@Value</div>
+        @if (!string.IsNullOrEmpty(Trend))
+        {
+            <div class="stat-trend">@Trend</div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Icon { get; set; }
+    [Parameter] public string Trend { get; set; }
+
+    [Parameter] public string Label { get; set; }
+    [Parameter] public int Value { get; set; }
+    [Parameter] public string Percentage { get; set; }
+    [Parameter] public string CssClass { get; set; }
+}
